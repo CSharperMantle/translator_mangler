@@ -64,7 +64,7 @@ fn main() {
     loop {
         let input_text = Input::<String>::with_theme(&terminal_theme)
             .with_prompt("Text to mangle")
-            .interact_text()
+            .interact()
             .unwrap();
         let input_orig_lang = Input::<String>::with_theme(&terminal_theme)
             .with_prompt("Original language of the text")

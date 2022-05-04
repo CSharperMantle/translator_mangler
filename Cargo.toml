@@ -5,7 +5,6 @@ version = "0.1.0"
 edition = "2021"
 authors = [ "CSharperMantle <baorong2005@126.com>" ]
 license = "BSD-3-Clause"
-license-file = "LICENSE"
 readme = "README.md"
 homepage = "https://github.com/CSharperMantle/translator_mangler"
 
