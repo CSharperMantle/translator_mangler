@@ -32,7 +32,7 @@ pub fn mangle(
     // Transform the text one language by another
     let last_lang: Result<&str, TranslationError> = (0..rounds)
         .map(|_| {
-            return langs.choose(&mut rng).unwrap();
+            langs.choose(&mut rng).unwrap()
         })
         .fold(Ok(original_lang), |prev_lang, current_lang| {
             mangled_text = translator.translate(&mangled_text, prev_lang?, current_lang)?;
@@ -43,7 +43,5 @@ pub fn mangle(
         });
 
     // Translate the text back to the original language
-    mangled_text = translator.translate(&mangled_text, last_lang?, original_lang)?;
-
-    Ok(mangled_text)
+    Ok(translator.translate(&mangled_text, last_lang?, original_lang)?)
 }

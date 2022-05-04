@@ -876,7 +876,7 @@ dependencies = [
 
 [[package]]
 name = "translator_mangler"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "dialoguer",
  "md5",

@@ -40,7 +40,7 @@ fn main() {
     };
 
     let input_langs = Input::<String>::with_theme(&terminal_theme)
-        .with_prompt("Language list to mangle (separated by comma)")
+        .with_prompt("Language list to mangle (comma-separated)")
         .default("en,zh,wyw,jp,fra,kor,th,pt,el,bul,ru,ara,spa,rom".to_string())
         .interact_text()
         .unwrap();
@@ -56,7 +56,7 @@ fn main() {
         .unwrap();
 
     let input_delay = Input::<u64>::with_theme(&terminal_theme)
-        .with_prompt("Delay between rounds (in milliseconds)")
+        .with_prompt("API call cool-down (in milliseconds)")
         .default(1000)
         .interact_text()
         .unwrap();

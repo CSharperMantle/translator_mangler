@@ -22,6 +22,7 @@ struct ResultBaidu {
 pub struct TranslatorBaidu {
     pub app_id: Box<String>,
     pub api_key: Box<String>,
+    client: reqwest::blocking::Client,
 }
 
 impl TranslatorBaidu {
@@ -29,6 +30,7 @@ impl TranslatorBaidu {
         TranslatorBaidu {
             app_id: Box::new(app_id.to_string()),
             api_key: Box::new(api_key.to_string()),
+            client: reqwest::blocking::Client::new(),
         }
     }
 }
@@ -65,26 +67,30 @@ impl Translator for TranslatorBaidu {
             ("sign", &signature),
         ];
 
-        // Send request and decode result
-        let result = reqwest::blocking::Client::new()
+        // Send request
+        let result = self
+            .client
             .post("https://fanyi-api.baidu.com/api/trans/vip/translate")
             .form(&form)
             .send();
-        if result.is_err() {
-            return Err(TranslationError {
-                message: format!("NETWORK ERR: {}", result.err().unwrap()),
-            });
+
+        // Handle network error
+        if let Err(e) = result {
+            return Err(TranslationError::new(
+                format!("NETWORK ERR: {}", e).as_str(),
+            ));
         }
         let result_json = result.unwrap().json::<ResultBaidu>().unwrap();
-
+        // Handle API error
         let error_code = &result_json.error_code;
         if error_code != "" && error_code.parse::<i32>().unwrap() != 0 {
-            return Err(TranslationError {
-                message: format!(
+            return Err(TranslationError::new(
+                format!(
                     "API ERR: {} {}",
                     result_json.error_code, result_json.error_msg
-                ),
-            });
+                )
+                .as_str(),
+            ));
         }
 
         Ok(result_json.trans_result[0].dst.clone())
