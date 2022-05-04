@@ -1,4 +1,5 @@
 pub mod baidu;
+pub mod google;
 
 #[derive(Debug)]
 pub struct TranslationError {

@@ -36,7 +36,7 @@ impl TranslatorBaidu {
 }
 
 impl Translator for TranslatorBaidu {
-    /// Translate `text` from one language to another with Baidu Translate API.
+    /// Translate `text` from one language to another with Baidu Translation API.
     ///
     /// Reference: [通用翻译API接入文档](https://api.fanyi.baidu.com/doc/21)
     ///
