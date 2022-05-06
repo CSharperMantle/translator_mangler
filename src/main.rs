@@ -1,8 +1,9 @@
 mod mangler;
 mod translator;
+
 use core::panic;
 
-use crate::mangler::{get_random_lang_pairs, mangle};
+use crate::mangler::{get_random_lang_path, mangle};
 use crate::translator::{baidu::TranslatorBaidu, google::TranslatorGoogleCloud, Translator};
 
 use dialoguer::{
@@ -35,6 +36,8 @@ fn prompt_google_cloud_api(theme: &dyn Theme) -> Box<dyn Translator> {
 fn main() {
     let terminal_theme = ColorfulTheme::default();
 
+    println!("[INFO] Welcome to translator_mangler!");
+
     let api_choices = ["Baidu", "Google Cloud"];
     let input_api_choices = Select::with_theme(&terminal_theme)
         .with_prompt("Select translate API")
@@ -50,7 +53,7 @@ fn main() {
     };
 
     let input_langs = Input::<String>::with_theme(&terminal_theme)
-        .with_prompt("Language list to mangle (comma-separated)")
+        .with_prompt("Language bank (comma-separated)")
         .default("en,zh,wyw,jp,fra,kor,th,pt,el,bul,ru,ara,spa,rom".to_string())
         .interact_text()
         .unwrap();
@@ -60,7 +63,7 @@ fn main() {
         .collect::<Vec<&str>>();
 
     let input_rounds = Input::<usize>::with_theme(&terminal_theme)
-        .with_prompt("Number of rounds to mangle")
+        .with_prompt("Rounds to mangle")
         .default(20)
         .interact_text()
         .unwrap();
@@ -70,6 +73,8 @@ fn main() {
         .default(1000)
         .interact_text()
         .unwrap();
+
+    println!("[INFO] Configuration done.");
 
     loop {
         let input_text = Input::<String>::with_theme(&terminal_theme)
@@ -81,15 +86,15 @@ fn main() {
             .interact_text()
             .unwrap();
 
-        let langs = get_random_lang_pairs(&input_orig_lang, &input_langs_vec, input_rounds);
+        let langs = get_random_lang_path(&input_orig_lang, &input_langs_vec, input_rounds);
 
-        println!("{}", "[Processing]");
+        println!("{}", "[INFO] Processing...");
         let mangled = mangle(&translator, &input_text, &langs, input_delay);
         if let Err(e) = mangled {
-            println!("[Error] {}", e.message);
+            println!("[ERROR] {}", e.message);
         } else {
-            println!("[Result] {}", mangled.unwrap());
+            println!("[OK] {}", mangled.unwrap());
         }
-        println!("{}", "[Done]");
+        println!("{}", "[INFO] Done.");
     }
 }
