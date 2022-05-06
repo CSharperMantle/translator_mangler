@@ -32,13 +32,15 @@ pub trait Translator {
     /// # Example
     /// ```rust
     /// let translator: Translator = ...;
+    /// let lang = LanguagePair { from_lang: "en".to_string(), to_lang: "zh".to_string() };
     ///
-    /// translator.translate("Hello, world!", "en", "zh").unwrap();
+    /// println!("{}", translator.translate("Hello, world!", &lang).unwrap());
     /// ```
-    fn translate(
-        &self,
-        text: &str,
-        from_lang: &str,
-        to_lang: &str,
-    ) -> Result<String, TranslationError>;
+    fn translate(&self, text: &str, lang: &LanguagePair) -> Result<String, TranslationError>;
+}
+
+/// A pair of languages to translate between.
+pub struct LanguagePair {
+    pub from_lang: String,
+    pub to_lang: String,
 }

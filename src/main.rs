@@ -2,13 +2,13 @@ mod mangler;
 mod translator;
 use core::panic;
 
-use crate::mangler::mangle;
+use crate::mangler::{get_random_lang_pairs, mangle};
+use crate::translator::{baidu::TranslatorBaidu, google::TranslatorGoogleCloud, Translator};
 
 use dialoguer::{
     theme::{ColorfulTheme, Theme},
     Input, Select,
 };
-use translator::{baidu::TranslatorBaidu, google::TranslatorGoogleCloud, Translator};
 
 fn prompt_baidu_api(theme: &dyn Theme) -> Box<dyn Translator> {
     let input_api_key = Input::<String>::with_theme(theme)
@@ -59,7 +59,7 @@ fn main() {
         .map(|s| s.trim())
         .collect::<Vec<&str>>();
 
-    let input_rounds = Input::<u32>::with_theme(&terminal_theme)
+    let input_rounds = Input::<usize>::with_theme(&terminal_theme)
         .with_prompt("Number of rounds to mangle")
         .default(20)
         .interact_text()
@@ -81,15 +81,10 @@ fn main() {
             .interact_text()
             .unwrap();
 
+        let langs = get_random_lang_pairs(&input_orig_lang, &input_langs_vec, input_rounds);
+
         println!("{}", "[Processing]");
-        let mangled = mangle(
-            &translator,
-            &input_text,
-            &input_orig_lang,
-            &input_langs_vec,
-            input_rounds,
-            input_delay,
-        );
+        let mangled = mangle(&translator, &input_text, &langs, input_delay);
         if let Err(e) = mangled {
             println!("[Error] {}", e.message);
         } else {

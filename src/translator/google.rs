@@ -1,4 +1,4 @@
-use super::{TranslationError, Translator};
+use super::{LanguagePair, TranslationError, Translator};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -41,20 +41,16 @@ impl Translator for TranslatorGoogleCloud {
     /// # Example
     /// ```rust
     /// let translator = TranslatorGoogleCloud::new("[YOUR_API_KEY]");
+    /// let lang = LanguagePair { from_lang: "en".to_string(), to_lang: "zh".to_string() };
     ///
-    /// println!("{}", translator.translate("Hello, world!", "en", "zh").unwrap());
+    /// println!("{}", translator.translate("Hello, world!", &lang).unwrap());
     /// ```
-    fn translate(
-        &self,
-        text: &str,
-        from_lang: &str,
-        to_lang: &str,
-    ) -> Result<String, TranslationError> {
+    fn translate(&self, text: &str, lang: &LanguagePair) -> Result<String, TranslationError> {
         // Generate request body
         let form = [
             ("q", text),
-            ("source", from_lang),
-            ("target", to_lang),
+            ("source", &lang.from_lang),
+            ("target", &lang.to_lang),
             ("key", &self.api_key),
             ("format", "text"),
             ("model", "base"),

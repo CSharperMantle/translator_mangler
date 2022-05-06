@@ -1,4 +1,4 @@
-use super::{TranslationError, Translator};
+use super::{LanguagePair, TranslationError, Translator};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -43,15 +43,11 @@ impl Translator for TranslatorBaidu {
     /// # Example
     /// ```rust
     /// let translator = TranslatorBaidu::new("[YOUR_APP_ID]", "[YOUR_API_KEY]");
+    /// let lang = LanguagePair { from_lang: "en".to_string(), to_lang: "zh".to_string() };
     ///
-    /// println!("{}", translator.translate("Hello, world!", "en", "zh").unwrap());
+    /// println!("{}", translator.translate("Hello, world!", &lang).unwrap());
     /// ```
-    fn translate(
-        &self,
-        text: &str,
-        from_lang: &str,
-        to_lang: &str,
-    ) -> Result<String, TranslationError> {
+    fn translate(&self, text: &str, lang: &LanguagePair) -> Result<String, TranslationError> {
         // Create salt for randomness
         let salt = rand::random::<[char; 4]>().iter().collect::<String>();
         // Calculate query signature
@@ -60,8 +56,8 @@ impl Translator for TranslatorBaidu {
         // Generate request body
         let form = [
             ("q", text),
-            ("from", from_lang),
-            ("to", to_lang),
+            ("from", &lang.from_lang),
+            ("to", &lang.to_lang),
             ("appid", &self.app_id),
             ("salt", &salt),
             ("sign", &signature),
