@@ -92,14 +92,15 @@ pub fn mangle(
     langs: &[LanguagePair],
     delay: u64,
 ) -> Result<String, TranslationError> {
-    let mut mangled_text = original_text.to_string();
-
-    // Traverse the list of languages and translate the text one by one.
-    for lang_pair in langs {
-        mangled_text = translator.translate(&mangled_text, lang_pair)?;
-        std::thread::sleep(std::time::Duration::from_millis(delay));
-    }
-
-    // Translate the text back to the original language
-    Ok(mangled_text)
+    // Traverse the langs to apply translation according to each pair,
+    // and then reduce the result to get the final translation.
+    langs
+        .iter()
+        .fold(Ok(original_text.to_string()), |acc, lang_pair| match acc {
+            Ok(last_result) => {
+                std::thread::sleep(std::time::Duration::from_millis(delay));
+                translator.translate(&last_result, lang_pair)
+            }
+            Err(e) => Err(e),
+        })
 }
