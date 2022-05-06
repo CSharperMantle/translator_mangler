@@ -5,6 +5,7 @@ Mangle your input text by translating it over and over again.
 ## Supported translation APIs
 
 * [x] [百度翻译 (Baidu Translate)](https://api.fanyi.baidu.com/product/111)
+* [ ] [Google Cloud Translation](https://cloud.google.com/translate/docs/reference/rest/v2/translate)
 
 More APIs are coming soon.
 
@@ -16,24 +17,29 @@ Below it a typical run with Baidu Translation API:
 
 ```text
 PS > .\translator_mangler.exe
+PS > cargo run
+    Finished dev [unoptimized + debuginfo] target(s) in 1.61s
+     Running `target\debug\translator_mangler.exe`
+[INFO] Welcome to translator_mangler!
 ✔ Select translate API · Baidu
 ✔ API key for Baidu Translation API · ********************
 ✔ App ID for Baidu Translation API · *****************
-✔ Language list to mangle (separated by comma) · en,zh,wyw,jp,fra,kor,th,pt,el,bul,ru,ara,spa,rom
-✔ Number of rounds to mangle · 20
-✔ Delay between rounds (in milliseconds) · 500
-✔ Text to mangle · The quick fox jumps over the lazy dog. The price of the shirt is 9.25 dollars.
+✔ Language bank (comma-separated) · en,zh,wyw,jp,fra,kor,th,pt,el,bul,ru,ara,spa,rom
+✔ Rounds to mangle · 25
+✔ API call cool-down (in milliseconds) · 150
+[INFO] Configuration done.
+✔ Text to mangle · The quick fox jumps over the lazy dog. The price of the shirt is 9.15 pounds.
 ✔ Original language of the text · en
-[Processing]
-[Result] The fox put the dog on his shirt and sold it for $25.
-[Done]
-✔ Text to mangle · I used to travel by air a great deal when I was a boy.
-✔ Original language of the text · en
-[Processing]
-[Result] I'm still young.
-[Done]
+[INFO] Processing...
+[OK] The fox put the dog on his shirt and sold it for $25.
+[INFO] Done.
+✔ Text to mangle · 先帝创业未半而中道崩殂，今天下三分，益州疲弊，此诚危急存亡之秋也。
+✔ Original language of the text · zh
+[INFO] Processing...
+[OK] 第一个日历不能分为两部分。现在这是一个没有良心的角色
+[INFO] Done.
 ? Text to mangle › ^C
-PS >
+PS > 
 ```
 
 ### Getting access to Baidu Translation API
