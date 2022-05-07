@@ -8,19 +8,27 @@ Mangle your input text by translating it over and over again.
 * [x] [有道 AI (Youdao AI Translation)](https://ai.youdao.com/product-fanyi-text.s), `Youdao`
 * [ ] [Google Cloud Translation](https://cloud.google.com/translate/docs/reference/rest/v2/translate), `Google Cloud`
 
-More APIs are coming soon.
+*Note: ticked APIs are fully tested. Please send a PR if you have tested unticked APIs.*
 
 ## Using `translator_mangler`
 
-Run the app and follow the instructions in the terminal.
+### Installation
 
-Below it a typical run with Baidu Translation API:
+You may:
+
+1. Download one of the pre-built binaries on [Releases](https://github.com/CSharperMantle/translator_mangler/releases) page,
+2. Or build your own version according to the [Development](#development) section.
+
+### Run
+
+Follow the instructions displayed in the terminal.
+
+You may need to register or purchase a subscription to use the APIs. Please refer to each API's manual for more information.
+
+Below it a typical run with Baidu Translation API on PowerShell:
 
 ```text
 PS > .\translator_mangler.exe
-PS > cargo run
-    Finished dev [unoptimized + debuginfo] target(s) in 1.61s
-     Running `target\debug\translator_mangler.exe`
 [INFO] Welcome to translator_mangler!
 ✔ Back-end translation API · Baidu
 ✔ API key for Baidu Translation API · ********************
@@ -43,11 +51,19 @@ PS > cargo run
 PS > 
 ```
 
-### Getting access to Baidu Translation API
+## Development
 
-You will need to obtain an API key and an App ID from [Baidu Open Platform](https://fanyi-api.baidu.com/product/11). The service is free for personal use.
+The project is written in pure Rust. You can simply clone the repository and Cargo will handle all the rest when you have your Rust toolchain ready.
 
-After obtaining the API key and App ID, you can use them in the `translator_mangler`.
+```sh
+git clone --depth=1 -- https://github.com/CSharperMantle/translator_mangler.git
+cd translator_mangler
+
+# Run development version
+cargo run
+# or release version
+cargo run -r
+```
 
 ## License
 
