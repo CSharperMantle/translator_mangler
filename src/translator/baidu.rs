@@ -1,13 +1,14 @@
 use super::{LanguagePair, TranslationError, Translator};
-use serde::Deserialize;
 
-#[derive(Deserialize)]
+use md5::Digest;
+
+#[derive(serde::Deserialize)]
 struct ResultBaiduNode {
     #[serde(default)]
     pub dst: String,
 }
 
-#[derive(Deserialize)]
+#[derive(serde::Deserialize)]
 struct ResultBaidu {
     #[serde(default = "Vec::new")]
     pub trans_result: Vec<ResultBaiduNode>,
@@ -19,6 +20,9 @@ struct ResultBaidu {
     pub error_msg: String,
 }
 
+/// A translator using Baidu Translate as its backend.
+///
+/// Reference: [Baidu Translate Docs](https://api.fanyi.baidu.com/)
 pub struct TranslatorBaidu {
     pub app_id: Box<String>,
     pub api_key: Box<String>,
@@ -26,6 +30,19 @@ pub struct TranslatorBaidu {
 }
 
 impl TranslatorBaidu {
+    /// Create an instance of `TranslatorBaidu` with the given API key and App ID.
+    ///
+    /// # Arguments
+    /// * `app_id` - Your App ID.
+    /// * `api_key` - Your API key.
+    ///
+    /// # Returns
+    /// A new instance of `TranslatorBaidu`.
+    ///
+    /// # Example
+    /// ```rust
+    /// let translator = TranslatorBaidu::new("[YOUR_APP_ID]", "[YOUR_API_KEY]");
+    /// ```
     pub fn new(app_id: &str, api_key: &str) -> TranslatorBaidu {
         TranslatorBaidu {
             app_id: Box::new(app_id.to_string()),
@@ -51,8 +68,11 @@ impl Translator for TranslatorBaidu {
         // Create salt for randomness
         let salt = rand::random::<[char; 4]>().iter().collect::<String>();
         // Calculate query signature
-        let query = format!("{}{}{}{}", self.app_id, text, salt, self.api_key);
-        let signature = format!("{:x}", md5::compute(query.as_bytes()));
+        let signature = hex::encode(
+            md5::Md5::new()
+                .chain_update(format!("{}{}{}{}", self.app_id, text, salt, self.api_key).as_bytes())
+                .finalize(),
+        );
         // Generate request body
         let form = [
             ("q", text),
@@ -80,13 +100,10 @@ impl Translator for TranslatorBaidu {
         // Handle API error
         let error_code = &result_json.error_code;
         if error_code != "" && error_code.parse::<i32>().unwrap() != 0 {
-            return Err(TranslationError::new(
-                format!(
-                    "API ERR: {} {}",
-                    result_json.error_code, result_json.error_msg
-                )
-                .as_str(),
-            ));
+            return Err(TranslationError::new(&format!(
+                "API ERR: {} {}",
+                result_json.error_code, result_json.error_msg
+            )));
         }
 
         Ok(result_json.trans_result[0].dst.clone())

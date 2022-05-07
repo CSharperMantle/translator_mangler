@@ -1,6 +1,8 @@
 pub mod baidu;
 pub mod google;
+pub mod youdao;
 
+/// Errors that may occur when translating.
 #[derive(Debug)]
 pub struct TranslationError {
     pub message: String,

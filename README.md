@@ -4,8 +4,9 @@ Mangle your input text by translating it over and over again.
 
 ## Supported translation APIs
 
-* [x] [百度翻译 (Baidu Translate)](https://api.fanyi.baidu.com/product/111)
-* [ ] [Google Cloud Translation](https://cloud.google.com/translate/docs/reference/rest/v2/translate)
+* [x] [百度翻译 (Baidu Translate)](https://api.fanyi.baidu.com/product/111), `Baidu`
+* [x] [有道 AI (Youdao AI Translation)](https://ai.youdao.com/product-fanyi-text.s), `Youdao`
+* [ ] [Google Cloud Translation](https://cloud.google.com/translate/docs/reference/rest/v2/translate), `Google Cloud`
 
 More APIs are coming soon.
 
@@ -21,10 +22,10 @@ PS > cargo run
     Finished dev [unoptimized + debuginfo] target(s) in 1.61s
      Running `target\debug\translator_mangler.exe`
 [INFO] Welcome to translator_mangler!
-✔ Select translate API · Baidu
+✔ Back-end translation API · Baidu
 ✔ API key for Baidu Translation API · ********************
 ✔ App ID for Baidu Translation API · *****************
-✔ Language bank (comma-separated) · en,zh,wyw,jp,fra,kor,th,pt,el,bul,ru,ara,spa,rom
+✔ Language bank (CSV, differs with each API) · en,zh,wyw,jp,fra,kor,th,pt,el,bul,ru,ara,spa,rom
 ✔ Rounds to mangle · 25
 ✔ API call cool-down (in milliseconds) · 150
 [INFO] Configuration done.

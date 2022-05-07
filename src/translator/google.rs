@@ -1,30 +1,44 @@
 use super::{LanguagePair, TranslationError, Translator};
-use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct TranslateTextResponseTranslation {
     #[serde(default)]
     pub translated_text: String,
 }
 
-#[derive(Deserialize)]
+#[derive(serde::Deserialize)]
 struct TranslateTextResponseList {
     #[serde(default = "Vec::new")]
     pub translations: Vec<TranslateTextResponseTranslation>,
 }
 
-#[derive(Deserialize)]
+#[derive(serde::Deserialize)]
 struct ResultGoogleCloud {
     pub data: TranslateTextResponseList,
 }
 
+/// A translator using Google Cloud API as its backend.
+///
+/// See: [Google Cloud](https://cloud.google.com/translate/docs/reference/rest/v2/Translate)
 pub struct TranslatorGoogleCloud {
     pub api_key: Box<String>,
     client: reqwest::blocking::Client,
 }
 
 impl TranslatorGoogleCloud {
+    /// Create an instance of `TranslatorGoogleCloud` with the given API key.
+    ///
+    /// # Arguments
+    /// * `api_key` - Your API key.
+    ///
+    /// # Returns
+    /// A new instance of `TranslatorGoogleCloud`.
+    ///
+    /// # Example
+    /// ```rust
+    /// let translator = TranslatorGoogleCloud::new("[YOUR_API_KEY]");
+    /// ```
     pub fn new(api_key: &str) -> TranslatorGoogleCloud {
         TranslatorGoogleCloud {
             api_key: Box::new(api_key.to_string()),

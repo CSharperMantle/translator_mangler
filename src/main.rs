@@ -4,7 +4,9 @@ mod translator;
 use core::panic;
 
 use crate::mangler::{get_random_lang_path, mangle};
-use crate::translator::{baidu::TranslatorBaidu, google::TranslatorGoogleCloud, Translator};
+use crate::translator::{
+    baidu::TranslatorBaidu, google::TranslatorGoogleCloud, youdao::TranslatorYoudao, Translator,
+};
 
 use dialoguer::{
     theme::{ColorfulTheme, Theme},
@@ -33,14 +35,27 @@ fn prompt_google_cloud_api(theme: &dyn Theme) -> Box<dyn Translator> {
     Box::new(TranslatorGoogleCloud::new(&input_api_key))
 }
 
+fn prompt_youdao_api(theme: &dyn Theme) -> Box<dyn Translator> {
+    let input_app_key = Input::<String>::with_theme(theme)
+        .with_prompt("App key for Youdao AI")
+        .interact_text()
+        .unwrap();
+    let input_app_secret = Input::<String>::with_theme(theme)
+        .with_prompt("App secret for Youdao AI")
+        .interact_text()
+        .unwrap();
+
+    Box::new(TranslatorYoudao::new(&input_app_key, &&input_app_secret))
+}
+
 fn main() {
     let terminal_theme = ColorfulTheme::default();
 
     println!("[INFO] Welcome to translator_mangler!");
 
-    let api_choices = ["Baidu", "Google Cloud"];
+    let api_choices = ["Baidu", "Google Cloud", "Youdao AI"];
     let input_api_choices = Select::with_theme(&terminal_theme)
-        .with_prompt("Select translate API")
+        .with_prompt("Back-end translation API")
         .default(0)
         .items(&api_choices)
         .interact()
@@ -49,11 +64,12 @@ fn main() {
     let translator = match arg_api_choice {
         "Baidu" => prompt_baidu_api(&terminal_theme),
         "Google Cloud" => prompt_google_cloud_api(&terminal_theme),
+        "Youdao AI" => prompt_youdao_api(&terminal_theme),
         _ => panic!("Unsupported API"),
     };
 
     let input_langs = Input::<String>::with_theme(&terminal_theme)
-        .with_prompt("Language bank (comma-separated)")
+        .with_prompt("Language bank (CSV, differs with each API)")
         .default("en,zh,wyw,jp,fra,kor,th,pt,el,bul,ru,ara,spa,rom".to_string())
         .interact_text()
         .unwrap();
