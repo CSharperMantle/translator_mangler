@@ -30,24 +30,27 @@ Below it a typical run with Baidu Translation API on PowerShell:
 ```text
 PS > .\translator_mangler.exe
 [INFO] Welcome to translator_mangler!
-✔ Back-end translation API · Baidu
-✔ API key for Baidu Translation API · ********************
-✔ App ID for Baidu Translation API · *****************
-✔ Language bank (CSV, differs with each API) · en,zh,wyw,jp,fra,kor,th,pt,el,bul,ru,ara,spa,rom
-✔ Rounds to mangle · 25
-✔ API call cool-down (in milliseconds) · 150
+? Back-end API? Baidu
+? API key for Baidu API? ********************
+? App ID for Baidu API? *****************
+? Language bank? zh,en,yue,wyw,jp,kor,fra,spa,th,ara,ru,pt,de,it,el,nl,pl,bul,est,dan,fin,cs,rom,slo,swe,hu,cht,vie
+? Rounds to mangle? 20
+? API cool-down? 150
 [INFO] Configuration done.
-✔ Text to mangle · The quick fox jumps over the lazy dog. The price of the shirt is 9.15 pounds.
-✔ Original language of the text · en
+? Text to mangle? The quick fox jumps over the lazy dog. The price of the shirt is 9.15 pounds.
+? Original language? en
 [INFO] Processing...
-[OK] The fox put the dog on his shirt and sold it for $25.
+[OK] The shirts are 165 and 169.
 [INFO] Done.
-✔ Text to mangle · 先帝创业未半而中道崩殂，今天下三分，益州疲弊，此诚危急存亡之秋也。
-✔ Original language of the text · zh
+? Text to mangle? 先帝创业未半而中道崩殂，今天下三分，益州疲弊，此诚危急存亡之秋也。
+? Original language? zh
 [INFO] Processing...
-[OK] 第一个日历不能分为两部分。现在这是一个没有良心的角色
+[OK] 第一位皇帝什么也没失去，但失败了。
 [INFO] Done.
-? Text to mangle › ^C
+? Text to mangle? ^C
+[Enter the text you wish to mangle]
+Error: OperationInterrupted
+
 PS > 
 ```
 
