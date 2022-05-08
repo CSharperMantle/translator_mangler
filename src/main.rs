@@ -17,11 +17,11 @@ fn prompt_baidu_api(theme: &dyn Theme) -> Box<dyn Translator> {
     let input_api_key = Input::<String>::with_theme(theme)
         .with_prompt("API key for Baidu Translation API")
         .interact_text()
-        .unwrap();
+        .unwrap_or_default();
     let input_app_id = Input::<String>::with_theme(theme)
         .with_prompt("App ID for Baidu Translation API")
         .interact_text()
-        .unwrap();
+        .unwrap_or_default();
 
     Box::new(TranslatorBaidu::new(&input_app_id, &input_api_key))
 }
@@ -30,7 +30,7 @@ fn prompt_google_cloud_api(theme: &dyn Theme) -> Box<dyn Translator> {
     let input_api_key = Input::<String>::with_theme(theme)
         .with_prompt("API key for Google Cloud Translation API")
         .interact_text()
-        .unwrap();
+        .unwrap_or_default();
 
     Box::new(TranslatorGoogleCloud::new(&input_api_key))
 }
@@ -39,11 +39,11 @@ fn prompt_youdao_api(theme: &dyn Theme) -> Box<dyn Translator> {
     let input_app_key = Input::<String>::with_theme(theme)
         .with_prompt("App key for Youdao AI")
         .interact_text()
-        .unwrap();
+        .unwrap_or_default();
     let input_app_secret = Input::<String>::with_theme(theme)
         .with_prompt("App secret for Youdao AI")
         .interact_text()
-        .unwrap();
+        .unwrap_or_default();
 
     Box::new(TranslatorYoudao::new(&input_app_key, &&input_app_secret))
 }
@@ -59,7 +59,7 @@ fn main() {
         .default(0)
         .items(&api_choices)
         .interact()
-        .unwrap();
+        .unwrap_or_default();
     let arg_api_choice = api_choices[input_api_choices];
     let translator = match arg_api_choice {
         "Baidu" => prompt_baidu_api(&terminal_theme),
@@ -69,10 +69,10 @@ fn main() {
     };
 
     let input_langs = Input::<String>::with_theme(&terminal_theme)
-        .with_prompt("Language bank (CSV, differs with each API)")
-        .default("en,zh,wyw,jp,fra,kor,th,pt,el,bul,ru,ara,spa,rom".to_string())
+        .with_prompt("Language bank (comma-separated)")
+        .default(translator.get_supported_langs().join(","))
         .interact_text()
-        .unwrap();
+        .unwrap_or_default();
     let input_langs_vec = input_langs
         .split(',')
         .map(|s| s.trim())
@@ -82,13 +82,13 @@ fn main() {
         .with_prompt("Rounds to mangle")
         .default(20)
         .interact_text()
-        .unwrap();
+        .unwrap_or_default();
 
     let input_delay = Input::<u64>::with_theme(&terminal_theme)
         .with_prompt("API call cool-down (in milliseconds)")
         .default(1000)
         .interact_text()
-        .unwrap();
+        .unwrap_or_default();
 
     println!("[INFO] Configuration done.");
 
@@ -96,11 +96,11 @@ fn main() {
         let input_text = Input::<String>::with_theme(&terminal_theme)
             .with_prompt("Text to mangle")
             .interact()
-            .unwrap();
+            .unwrap_or_default();
         let input_orig_lang = Input::<String>::with_theme(&terminal_theme)
             .with_prompt("Original language of the text")
             .interact_text()
-            .unwrap();
+            .unwrap_or_default();
 
         let langs = get_random_lang_path(&input_orig_lang, &input_langs_vec, input_rounds);
 

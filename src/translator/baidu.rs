@@ -50,6 +50,13 @@ impl TranslatorBaidu {
             client: reqwest::blocking::Client::new(),
         }
     }
+
+    /// A list of supported languages.
+    const SUPPORTED_LANGS: [&'static str; 28] = [
+        "zh", "en", "yue", "wyw", "jp", "kor", "fra", "spa", "th", "ara", "ru", "pt", "de", "it",
+        "el", "nl", "pl", "bul", "est", "dan", "fin", "cs", "rom", "slo", "swe", "hu", "cht",
+        "vie",
+    ];
 }
 
 impl Translator for TranslatorBaidu {
@@ -65,6 +72,12 @@ impl Translator for TranslatorBaidu {
     /// println!("{}", translator.translate("Hello, world!", &lang).unwrap());
     /// ```
     fn translate(&self, text: &str, lang: &LanguagePair) -> Result<String, TranslationError> {
+        if !self.is_single_lang_supported(&lang.from_lang.as_str())
+            || !self.is_single_lang_supported(&lang.to_lang.as_str())
+        {
+            return Err(TranslationError::new("Unsupported language"));
+        }
+
         // Create salt for randomness
         let salt = rand::random::<[char; 4]>().iter().collect::<String>();
         // Calculate query signature
@@ -107,5 +120,13 @@ impl Translator for TranslatorBaidu {
         }
 
         Ok(result_json.trans_result[0].dst.clone())
+    }
+
+    fn get_supported_langs(&self) -> &[&str] {
+        &Self::SUPPORTED_LANGS
+    }
+
+    fn is_single_lang_supported(&self, single_lang: &str) -> bool {
+        Self::SUPPORTED_LANGS.contains(&single_lang)
     }
 }

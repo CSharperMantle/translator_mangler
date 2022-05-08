@@ -42,6 +42,11 @@ impl TranslatorYoudao {
             client: reqwest::blocking::Client::new(),
         }
     }
+
+    const SUPPORTED_LANGS: [&'static str; 15] = [
+        "zh-CHS", "zh-CHT", "vi", "en", "id", "it", "es", "ja", "pt", "ko", "fr", "ru", "de", "ar",
+        "th",
+    ];
 }
 
 impl Translator for TranslatorYoudao {
@@ -57,6 +62,12 @@ impl Translator for TranslatorYoudao {
     /// println!("{}", translator.translate("Hello, world!", &lang).unwrap());
     /// ```
     fn translate(&self, text: &str, lang: &LanguagePair) -> Result<String, TranslationError> {
+        if !self.is_single_lang_supported(&lang.from_lang.as_str())
+            || !self.is_single_lang_supported(&lang.to_lang.as_str())
+        {
+            return Err(TranslationError::new("Unsupported language"));
+        }
+
         // Get current UNIX timestamp
         let time_utc_unix = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
@@ -118,5 +129,13 @@ impl Translator for TranslatorYoudao {
         }
 
         Ok(result_json.translation[0].clone())
+    }
+
+    fn get_supported_langs(&self) -> &[&str] {
+        &Self::SUPPORTED_LANGS
+    }
+
+    fn is_single_lang_supported(&self, single_lang: &str) -> bool {
+        Self::SUPPORTED_LANGS.contains(&single_lang)
     }
 }

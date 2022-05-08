@@ -36,9 +36,32 @@ pub trait Translator {
     /// let translator: Translator = ...;
     /// let lang = LanguagePair { from_lang: "en".to_string(), to_lang: "zh".to_string() };
     ///
-    /// println!("{}", translator.translate("Hello, world!", &lang).unwrap());
+    /// let text = translator.translate("Hello, world!", &lang).unwrap();
     /// ```
     fn translate(&self, text: &str, lang: &LanguagePair) -> Result<String, TranslationError>;
+
+    /// Get a list of all supported languages.
+    /// 
+    /// # Example
+    /// ```rust
+    /// let translator: Translator = ...;
+    /// 
+    /// let languages = translator.get_languages();
+    /// ```
+    fn get_supported_langs(&self) -> &[&str];
+
+    /// Check if a language is supported.
+    /// 
+    /// # Arguments
+    /// * `single_lang` - The language to check.
+    /// 
+    /// # Example
+    /// ```rust
+    /// let translator: Translator = ...;
+    /// 
+    /// let is_supported = translator.is_single_lang_supported("klingon");
+    /// ```
+    fn is_single_lang_supported(&self, single_lang: &str) -> bool;
 }
 
 /// A pair of languages to translate between.
