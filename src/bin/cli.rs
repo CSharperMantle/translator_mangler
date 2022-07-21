@@ -1,12 +1,11 @@
-mod mangler;
-mod translator;
+use inquire::error::InquireError;
 
-use core::panic;
-
-use crate::mangler::{get_random_lang_path, mangle};
-use crate::translator::{
-    baidu::TranslatorBaidu, google::TranslatorGoogleCloud, youdao::TranslatorYoudao, Translator,
-};
+use translator_mangler::get_random_lang_path;
+use translator_mangler::mangle;
+use translator_mangler::Translator;
+use translator_mangler::TranslatorBaidu;
+use translator_mangler::TranslatorGoogleCloud;
+use translator_mangler::TranslatorYoudao;
 
 fn prompt_baidu_api() -> inquire::error::InquireResult<Box<dyn Translator>> {
     let input_api_key = inquire::Text::new("API key for Baidu API?").prompt()?;
@@ -45,7 +44,11 @@ fn main() -> inquire::error::InquireResult<()> {
         "Baidu" => prompt_baidu_api()?,
         "Google Cloud" => prompt_google_cloud_api()?,
         "Youdao AI" => prompt_youdao_api()?,
-        _ => panic!("Unsupported API"),
+        _ => {
+            return Err(InquireError::InvalidConfiguration(
+                "Back-end API".to_string(),
+            ))
+        }
     };
 
     let input_langs = inquire::Text::new("Language bank?")

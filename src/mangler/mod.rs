@@ -1,4 +1,4 @@
-use super::translator::{LanguagePair, TranslationError, Translator};
+use crate::translator::{LanguagePair, TranslationError, Translator};
 use rand::seq::SliceRandom;
 
 /// Get a random 'path' of languages, starting from and ending with

@@ -1,5 +1,7 @@
 # translator_mangler
 
+| **English (en)** | [中文 (zh-CN)](README-zh.md) |
+
 Mangle your input text by translating it over and over again.
 
 ## Supported translation APIs

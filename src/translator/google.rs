@@ -89,17 +89,17 @@ impl Translator for TranslatorGoogleCloud {
             .send();
         // Handle network error
         if let Err(e) = result {
-            return Err(TranslationError::new(
-                format!("NETWORK ERR: {}", e).as_str(),
-            ));
+            return Err(TranslationError {
+                message: format!("NETWORK ERR: {}", e),
+            });
         }
         let unwrapped_result = result.unwrap();
 
         let status = unwrapped_result.status();
         if !status.is_success() {
-            return Err(TranslationError::new(
-                format!("REQUEST ERR: HTTP {}", status).as_str(),
-            ));
+            return Err(TranslationError {
+                message: format!("REQUEST ERR: HTTP {}", status),
+            });
         }
 
         let result_json = unwrapped_result.json::<ResultGoogleCloud>().unwrap();
@@ -107,7 +107,7 @@ impl Translator for TranslatorGoogleCloud {
         Ok(result_json.data.translations[0].translated_text.clone())
     }
 
-    fn get_supported_langs(&self) -> &[&str] {
+    fn get_supported_langs(&self) -> &[&'static str] {
         &Self::SUPPORTED_LANGS
     }
 

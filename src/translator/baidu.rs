@@ -75,7 +75,9 @@ impl Translator for TranslatorBaidu {
         if !self.is_single_lang_supported(&lang.from_lang.as_str())
             || !self.is_single_lang_supported(&lang.to_lang.as_str())
         {
-            return Err(TranslationError::new("Unsupported language"));
+            return Err(TranslationError {
+                message: "Unsupported language".to_string(),
+            });
         }
 
         // Create salt for randomness
@@ -105,24 +107,26 @@ impl Translator for TranslatorBaidu {
 
         // Handle network error
         if let Err(e) = result {
-            return Err(TranslationError::new(
-                format!("NETWORK ERR: {}", e).as_str(),
-            ));
+            return Err(TranslationError {
+                message: format!("NETWORK ERR: {}", e),
+            });
         }
         let result_json = result.unwrap().json::<ResultBaidu>().unwrap();
         // Handle API error
         let error_code = &result_json.error_code;
         if error_code != "" && error_code.parse::<i32>().unwrap() != 0 {
-            return Err(TranslationError::new(&format!(
-                "API ERR: {} {}",
-                result_json.error_code, result_json.error_msg
-            )));
+            return Err(TranslationError {
+                message: format!(
+                    "API ERR: {} {}",
+                    result_json.error_code, result_json.error_msg
+                ),
+            });
         }
 
         Ok(result_json.trans_result[0].dst.clone())
     }
 
-    fn get_supported_langs(&self) -> &[&str] {
+    fn get_supported_langs(&self) -> &[&'static str] {
         &Self::SUPPORTED_LANGS
     }
 

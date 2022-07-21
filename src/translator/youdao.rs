@@ -65,7 +65,9 @@ impl Translator for TranslatorYoudao {
         if !self.is_single_lang_supported(&lang.from_lang.as_str())
             || !self.is_single_lang_supported(&lang.to_lang.as_str())
         {
-            return Err(TranslationError::new("Unsupported language"));
+            return Err(TranslationError {
+                message: "Unsupported language".to_string(),
+            });
         }
 
         // Get current UNIX timestamp
@@ -114,24 +116,23 @@ impl Translator for TranslatorYoudao {
 
         // Handle network error
         if let Err(e) = result {
-            return Err(TranslationError::new(
-                format!("NETWORK ERR: {}", e).as_str(),
-            ));
+            return Err(TranslationError {
+                message: format!("NETWORK ERR: {}", e),
+            });
         }
         let result_json = result.unwrap().json::<ResultYoudao>().unwrap();
         // Handle API error
         let error_code = &result_json.error_code;
         if error_code != "" && error_code.parse::<i32>().unwrap() != 0 {
-            return Err(TranslationError::new(&format!(
-                "API ERR: {}",
-                result_json.error_code
-            )));
+            return Err(TranslationError {
+                message: format!("API ERR: {}", result_json.error_code),
+            });
         }
 
         Ok(result_json.translation[0].clone())
     }
 
-    fn get_supported_langs(&self) -> &[&str] {
+    fn get_supported_langs(&self) -> &[&'static str] {
         &Self::SUPPORTED_LANGS
     }
 

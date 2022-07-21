@@ -16,3 +16,12 @@ rand = "0.8.5"
 reqwest = { version = "0.11.10", features = ["blocking", "json"] }
 serde = { version = "1.0.137", features = ["derive"] }
 sha2 = "0.10.2"
+
+[lib]
+name = "translator_mangler"
+path = "src/lib.rs"
+crate-type = [ "rlib", "cdylib", "staticlib" ]
+
+[[bin]]
+name = "translator_mangler_cli"
+path = "src/bin/cli.rs"

@@ -5,15 +5,8 @@ pub mod youdao;
 /// Errors that may occur when translating.
 #[derive(Debug)]
 pub struct TranslationError {
+    /// The message string describing the error.
     pub message: String,
-}
-
-impl TranslationError {
-    pub fn new(message: &str) -> TranslationError {
-        TranslationError {
-            message: message.to_string(),
-        }
-    }
 }
 
 impl std::fmt::Display for TranslationError {
@@ -48,7 +41,7 @@ pub trait Translator {
     /// 
     /// let languages = translator.get_languages();
     /// ```
-    fn get_supported_langs(&self) -> &[&str];
+    fn get_supported_langs(&self) -> &[&'static str];
 
     /// Check if a language is supported.
     /// 
