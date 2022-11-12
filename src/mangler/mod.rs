@@ -34,7 +34,7 @@ pub fn get_random_lang_path(
     rounds: usize,
 ) -> Vec<LanguagePair> {
     // Fast-fail
-    if lang_bank.len() < 1 {
+    if lang_bank.is_empty() {
         return vec![LanguagePair {
             from_lang: original_lang.to_string(),
             to_lang: original_lang.to_string(),
@@ -87,7 +87,7 @@ pub fn get_random_lang_path(
 /// let result = mangle(&translator, "Ignorance is strength.", &langs, 1000);
 /// ```
 pub fn mangle(
-    translator: &Box<dyn Translator>,
+    translator: &dyn Translator,
     original_text: &str,
     lang_path: &[LanguagePair],
     delay: u64,

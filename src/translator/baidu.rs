@@ -72,8 +72,8 @@ impl Translator for TranslatorBaidu {
     /// println!("{}", translator.translate("Hello, world!", &lang).unwrap());
     /// ```
     fn translate(&self, text: &str, lang: &LanguagePair) -> Result<String, TranslationError> {
-        if !self.is_single_lang_supported(&lang.from_lang.as_str())
-            || !self.is_single_lang_supported(&lang.to_lang.as_str())
+        if !self.is_single_lang_supported(lang.from_lang.as_str())
+            || !self.is_single_lang_supported(lang.to_lang.as_str())
         {
             return Err(TranslationError {
                 message: "Unsupported language".to_string(),
@@ -114,7 +114,7 @@ impl Translator for TranslatorBaidu {
         let result_json = result.unwrap().json::<ResultBaidu>().unwrap();
         // Handle API error
         let error_code = &result_json.error_code;
-        if error_code != "" && error_code.parse::<i32>().unwrap() != 0 {
+        if !error_code.is_empty() && error_code.parse::<i32>().unwrap() != 0 {
             return Err(TranslationError {
                 message: format!(
                     "API ERR: {} {}",

@@ -84,13 +84,13 @@ fn main() -> inquire::error::InquireResult<()> {
 
         let langs = get_random_lang_path(&input_orig_lang, &input_langs_vec, input_rounds);
 
-        println!("{}", "[INFO] Processing...");
-        let mangled = mangle(&translator, &input_text, &langs, input_delay);
+        println!("[INFO] Processing...");
+        let mangled = mangle(translator.as_ref(), &input_text, &langs, input_delay);
         if let Err(e) = mangled {
             println!("[ERROR] {}", e.message);
         } else {
             println!("[OK] {}", mangled.unwrap());
         }
-        println!("{}", "[INFO] Done.");
+        println!("[INFO] Done.");
     }
 }
