@@ -64,12 +64,12 @@ fn main() -> inquire::error::InquireResult<()> {
 
     let input_rounds = inquire::CustomType::<usize>::new("Rounds to mangle?")
         .with_help_message("Enter the number of rounds you want to translate")
-        .with_default((20, &|x| format!("{}", x)))
+        .with_default(20)
         .prompt()?;
 
     let input_delay = inquire::CustomType::<u64>::new("API cool-down?")
         .with_help_message("Enter the milliseconds between each API call")
-        .with_default((1000, &|x| format!("{}", x)))
+        .with_default(1000)
         .prompt()?;
 
     println!("[INFO] Configuration done.");

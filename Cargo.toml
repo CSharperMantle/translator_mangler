@@ -10,12 +10,12 @@ homepage = "https://github.com/CSharperMantle/translator_mangler"
 
 [dependencies]
 hex = "0.4.3"
-inquire = "0.2.1"
-md-5 = "0.10.1"
+inquire = "0.5.2"
+md-5 = "0.10.5"
 rand = "0.8.5"
-reqwest = { version = "0.11.10", features = ["blocking", "json"] }
-serde = { version = "1.0.137", features = ["derive"] }
-sha2 = "0.10.2"
+reqwest = { version = "0.11.12", features = ["blocking", "json"] }
+serde = { version = "1.0.147", features = ["derive"] }
+sha2 = "0.10.6"
 
 [lib]
 name = "translator_mangler"
