@@ -1,4 +1,4 @@
-use super::{LanguagePair, TranslationError, Translator};
+use super::{TranslationDirection, TranslationError, Translator};
 
 #[derive(serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -66,11 +66,15 @@ impl Translator for TranslatorGoogleCloud {
     /// # Example
     /// ```rust
     /// let translator = TranslatorGoogleCloud::new("[YOUR_API_KEY]");
-    /// let lang = LanguagePair { from_lang: "en".to_string(), to_lang: "zh".to_string() };
+    /// let lang = TranslationDirection { from_lang: "en".to_string(), to_lang: "zh".to_string() };
     ///
     /// println!("{}", translator.translate("Hello, world!", &lang).unwrap());
     /// ```
-    fn translate(&self, text: &str, lang: &LanguagePair) -> Result<String, TranslationError> {
+    fn translate(
+        &self,
+        text: &str,
+        lang: &TranslationDirection,
+    ) -> Result<String, TranslationError> {
         // Generate request body
         let form = [
             ("q", text),
@@ -111,7 +115,7 @@ impl Translator for TranslatorGoogleCloud {
         &Self::SUPPORTED_LANGS
     }
 
-    fn is_single_lang_supported(&self, single_lang: &str) -> bool {
+    fn is_lang_supported(&self, single_lang: &str) -> bool {
         Self::SUPPORTED_LANGS.contains(&single_lang)
     }
 }

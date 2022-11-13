@@ -1,4 +1,4 @@
-use crate::translator::{LanguagePair, TranslationError, Translator};
+use crate::translator::{TranslationDirection, TranslationError, Translator};
 use rand::seq::SliceRandom;
 
 /// Get a random 'path' of languages, starting from and ending with
@@ -21,21 +21,21 @@ use rand::seq::SliceRandom;
 /// let pairs = get_random_lang_path(original_lang, &lang_bank, rounds);
 /// // A possible result:
 /// // vec![
-/// //    LanguagePair { from_lang: "en".to_string(), to_lang: "fr".to_string() },
-/// //    LanguagePair { from_lang: "fr".to_string(), to_lang: "en".to_string() },
-/// //    LanguagePair { from_lang: "en".to_string(), to_lang: "fr".to_string() },
-/// //    LanguagePair { from_lang: "fr".to_string(), to_lang: "zh".to_string() },
-/// //    LanguagePair { from_lang: "zh".to_string(), to_lang: "en".to_string() },
+/// //    TranslationDirection { from_lang: "en".to_string(), to_lang: "fr".to_string() },
+/// //    TranslationDirection { from_lang: "fr".to_string(), to_lang: "en".to_string() },
+/// //    TranslationDirection { from_lang: "en".to_string(), to_lang: "fr".to_string() },
+/// //    TranslationDirection { from_lang: "fr".to_string(), to_lang: "zh".to_string() },
+/// //    TranslationDirection { from_lang: "zh".to_string(), to_lang: "en".to_string() },
 /// // ]
 /// ```
 pub fn get_random_lang_path(
     original_lang: &str,
     lang_bank: &[&str],
     rounds: usize,
-) -> Vec<LanguagePair> {
+) -> Vec<TranslationDirection> {
     // Fast-fail
     if lang_bank.is_empty() {
-        return vec![LanguagePair {
+        return vec![TranslationDirection {
             from_lang: original_lang.to_string(),
             to_lang: original_lang.to_string(),
         }];
@@ -44,7 +44,7 @@ pub fn get_random_lang_path(
     let mut rng = rand::thread_rng();
 
     let mut prev_lang = original_lang.to_string();
-    let mut langs: Vec<LanguagePair> = Vec::with_capacity(rounds);
+    let mut langs: Vec<TranslationDirection> = Vec::with_capacity(rounds);
     for i in 0..rounds {
         // Choose a random language from the lang_bank,
         // or original_lang if we have reached the last round.
@@ -59,7 +59,7 @@ pub fn get_random_lang_path(
             }
             l.to_string()
         };
-        langs.push(LanguagePair {
+        langs.push(TranslationDirection {
             from_lang: prev_lang,
             to_lang: next_lang.clone(),
         });
@@ -89,7 +89,7 @@ pub fn get_random_lang_path(
 pub fn mangle(
     translator: &dyn Translator,
     original_text: &str,
-    lang_path: &[LanguagePair],
+    lang_path: &[TranslationDirection],
     delay: u64,
 ) -> Result<String, TranslationError> {
     //Reduce the langs list, apply translation to each pair.

@@ -1,4 +1,4 @@
-use super::{LanguagePair, TranslationError, Translator};
+use super::{TranslationDirection, TranslationError, Translator};
 
 use md5::Digest;
 
@@ -67,13 +67,17 @@ impl Translator for TranslatorBaidu {
     /// # Example
     /// ```rust
     /// let translator = TranslatorBaidu::new("[YOUR_APP_ID]", "[YOUR_API_KEY]");
-    /// let lang = LanguagePair { from_lang: "en".to_string(), to_lang: "zh".to_string() };
+    /// let lang = TranslationDirection { from_lang: "en".to_string(), to_lang: "zh".to_string() };
     ///
     /// println!("{}", translator.translate("Hello, world!", &lang).unwrap());
     /// ```
-    fn translate(&self, text: &str, lang: &LanguagePair) -> Result<String, TranslationError> {
-        if !self.is_single_lang_supported(lang.from_lang.as_str())
-            || !self.is_single_lang_supported(lang.to_lang.as_str())
+    fn translate(
+        &self,
+        text: &str,
+        lang: &TranslationDirection,
+    ) -> Result<String, TranslationError> {
+        if !self.is_lang_supported(lang.from_lang.as_str())
+            || !self.is_lang_supported(lang.to_lang.as_str())
         {
             return Err(TranslationError {
                 message: "Unsupported language".to_string(),
@@ -130,7 +134,7 @@ impl Translator for TranslatorBaidu {
         &Self::SUPPORTED_LANGS
     }
 
-    fn is_single_lang_supported(&self, single_lang: &str) -> bool {
+    fn is_lang_supported(&self, single_lang: &str) -> bool {
         Self::SUPPORTED_LANGS.contains(&single_lang)
     }
 }
