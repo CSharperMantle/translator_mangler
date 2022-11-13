@@ -1,7 +1,7 @@
 [package]
 name = "translator_mangler"
 description = "Mangle your input text by translating it over and over again."
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
 authors = [ "CSharperMantle <baorong2005@126.com>" ]
 license = "BSD-3-Clause"
