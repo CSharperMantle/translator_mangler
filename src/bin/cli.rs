@@ -1,4 +1,5 @@
 use inquire::error::InquireError;
+use inquire::PasswordDisplayMode;
 
 use translator_mangler::get_random_lang_path;
 use translator_mangler::mangle;
@@ -8,7 +9,10 @@ use translator_mangler::TranslatorGoogleCloud;
 use translator_mangler::TranslatorYoudao;
 
 fn prompt_baidu_api() -> inquire::error::InquireResult<Box<dyn Translator>> {
-    let input_api_key = inquire::Text::new("API key for Baidu API?").prompt()?;
+    let input_api_key = inquire::Password::new("API key for Baidu API?")
+        .without_confirmation()
+        .with_display_mode(PasswordDisplayMode::Masked)
+        .prompt()?;
     let input_app_id = inquire::Text::new("App ID for Baidu API?").prompt()?;
 
     Ok(Box::new(TranslatorBaidu::new(
@@ -18,14 +22,20 @@ fn prompt_baidu_api() -> inquire::error::InquireResult<Box<dyn Translator>> {
 }
 
 fn prompt_google_cloud_api() -> inquire::error::InquireResult<Box<dyn Translator>> {
-    let input_api_key = inquire::Text::new("API key for Google Cloud API?").prompt()?;
+    let input_api_key = inquire::Password::new("API key for Google Cloud API?")
+        .without_confirmation()
+        .with_display_mode(PasswordDisplayMode::Masked)
+        .prompt()?;
 
     Ok(Box::new(TranslatorGoogleCloud::new(&input_api_key)))
 }
 
 fn prompt_youdao_api() -> inquire::error::InquireResult<Box<dyn Translator>> {
     let input_app_key = inquire::Text::new("App key for Youdao AI API?").prompt()?;
-    let input_app_secret = inquire::Text::new("App secret for Youdao AI API?").prompt()?;
+    let input_app_secret = inquire::Password::new("App secret for Youdao AI API?")
+        .without_confirmation()
+        .with_display_mode(PasswordDisplayMode::Masked)
+        .prompt()?;
 
     Ok(Box::new(TranslatorYoudao::new(
         &input_app_key,

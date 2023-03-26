@@ -20,7 +20,6 @@ sha2 = "0.10.6"
 [lib]
 name = "translator_mangler"
 path = "src/lib.rs"
-crate-type = [ "rlib", "cdylib", "staticlib" ]
 
 [[bin]]
 name = "translator_mangler_cli"
