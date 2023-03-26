@@ -10,7 +10,7 @@ Mangle your input text by translating it over and over again.
 * [x] [有道 AI (Youdao AI Translation)](https://ai.youdao.com/product-fanyi-text.s), `Youdao`
 * [ ] [Google Cloud Translation](https://cloud.google.com/translate/docs/reference/rest/v2/translate), `Google Cloud`
 
-*Note: ticked APIs are fully tested. Please send a PR if you have tested unticked APIs.*
+*Note: Only ticked APIs are fully tested.*
 
 ## Using `translator_mangler`
 

@@ -34,7 +34,7 @@ fn prompt_youdao_api() -> inquire::error::InquireResult<Box<dyn Translator>> {
 }
 
 fn main() -> inquire::error::InquireResult<()> {
-    println!("[INFO] Welcome to translator_mangler!");
+    println!("[i] Welcome to translator_mangler!");
 
     let api_choices = vec!["Baidu", "Google Cloud", "Youdao AI"];
     let input_api_choices = inquire::Select::new("Back-end API?", api_choices)
@@ -52,9 +52,7 @@ fn main() -> inquire::error::InquireResult<()> {
     };
 
     let input_langs = inquire::Text::new("Language bank?")
-        .with_help_message(
-            "Choose the intermediate and hidden languages you want to use in mangling, separated by comma",
-        )
+        .with_help_message("Choose the languages you want to use in mangling, separated by comma")
         .with_default(&translator.get_supported_langs().join(","))
         .prompt()?;
     let input_langs_vec = input_langs
@@ -72,7 +70,12 @@ fn main() -> inquire::error::InquireResult<()> {
         .with_default(1000)
         .prompt()?;
 
-    println!("[INFO] Configuration done.");
+    let input_preview_plan = inquire::CustomType::<bool>::new("Preview plan?")
+        .with_help_message("Enter whether you want to preview mangling plans before running")
+        .with_default(true)
+        .prompt()?;
+
+    println!("[+] Configuration done.");
 
     loop {
         let input_text = inquire::Text::new("Text to mangle?")
@@ -84,13 +87,22 @@ fn main() -> inquire::error::InquireResult<()> {
 
         let langs = get_random_lang_path(&input_orig_lang, &input_langs_vec, input_rounds);
 
-        println!("[INFO] Processing...");
-        let mangled = mangle(translator.as_ref(), &input_text, &langs, input_delay);
-        if let Err(e) = mangled {
-            println!("[ERROR] {}", e.message);
-        } else {
-            println!("[OK] {}", mangled.unwrap());
+        if input_preview_plan {
+            println!(
+                "[i] Mangling plan: {}",
+                langs
+                    .iter()
+                    .map(|pair| format!("{}->{} ", pair.from_lang, pair.to_lang))
+                    .reduce(|acc, current| acc + &current)
+                    .unwrap_or_default()
+            )
         }
-        println!("[INFO] Done.");
+
+        println!("[i] Processing...");
+        let mangled = mangle(translator.as_ref(), &input_text, &langs, input_delay);
+        match mangled {
+            Ok(result) => println!("[+] {}", result),
+            Err(e) => println!("[!] {}", e.message),
+        }
     }
 }
