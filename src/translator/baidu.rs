@@ -85,7 +85,9 @@ impl Translator for TranslatorBaidu {
         }
 
         // Create salt for randomness
-        let salt = rand::random::<[char; 4]>().iter().collect::<String>();
+        let salt = std::iter::repeat_with(|| fastrand::char(..))
+            .take(4)
+            .collect::<String>();
         // Calculate query signature
         let signature = hex::encode(
             md5::Md5::new()

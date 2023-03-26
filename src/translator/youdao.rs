@@ -86,7 +86,9 @@ impl Translator for TranslatorYoudao {
             text.to_string()
         };
         // Create salt for randomness
-        let salt = rand::random::<[char; 4]>().iter().collect::<String>();
+        let salt = std::iter::repeat_with(|| fastrand::char(..))
+            .take(4)
+            .collect::<String>();
         // Create signature
         let signature = hex::encode(
             sha2::Sha256::new()

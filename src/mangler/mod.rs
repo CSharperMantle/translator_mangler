@@ -1,5 +1,4 @@
 use crate::translator::{TranslationDirection, TranslationError, Translator};
-use rand::seq::SliceRandom;
 
 /// Get a random 'path' of languages, starting from and ending with
 /// `original_language`. The nodes in the way is randomly selected from
@@ -41,27 +40,25 @@ pub fn get_random_lang_path(
         }];
     }
 
-    let mut rng = rand::thread_rng();
-
-    let mut prev_lang = original_lang.to_string();
+    let mut prev_lang = original_lang;
     let mut langs: Vec<TranslationDirection> = Vec::with_capacity(rounds);
     for i in 0..rounds {
         // Choose a random language from the lang_bank,
         // or original_lang if we have reached the last round.
         let next_lang = if i == (rounds - 1) {
-            original_lang.to_string()
+            original_lang
         } else {
-            let mut l = lang_bank.choose(&mut rng).unwrap();
+            let mut l = lang_bank[fastrand::usize(..lang_bank.len())];
             // Make sure we don't get the same language twice
             // to avoid request waste.
-            while l == &prev_lang {
-                l = lang_bank.choose(&mut rng).unwrap();
+            while l == prev_lang {
+                l = lang_bank[fastrand::usize(..lang_bank.len())];
             }
-            l.to_string()
+            l
         };
         langs.push(TranslationDirection {
-            from_lang: prev_lang,
-            to_lang: next_lang.clone(),
+            from_lang: prev_lang.to_string(),
+            to_lang: next_lang.to_string(),
         });
         // Move on.
         prev_lang = next_lang;
