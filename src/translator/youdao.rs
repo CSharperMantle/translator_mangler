@@ -102,7 +102,7 @@ impl Translator for TranslatorYoudao {
                 .finalize(),
         );
         // Generate request body
-        let form = [
+        let req_obj = [
             ("q", text),
             ("from", &lang.from_lang),
             ("to", &lang.to_lang),
@@ -117,7 +117,7 @@ impl Translator for TranslatorYoudao {
         let result = self
             .client
             .post("https://openapi.youdao.com/api")
-            .form(&form)
+            .json(&req_obj)
             .send();
 
         // Handle network error

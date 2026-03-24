@@ -95,7 +95,7 @@ impl Translator for TranslatorBaidu {
                 .finalize(),
         );
         // Generate request body
-        let form = [
+        let req_obj = [
             ("q", text),
             ("from", &lang.from_lang),
             ("to", &lang.to_lang),
@@ -108,7 +108,7 @@ impl Translator for TranslatorBaidu {
         let result = self
             .client
             .post("https://fanyi-api.baidu.com/api/trans/vip/translate")
-            .form(&form)
+            .json(&req_obj)
             .send();
 
         // Handle network error

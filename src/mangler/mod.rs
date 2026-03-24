@@ -92,11 +92,8 @@ pub fn mangle(
     //Reduce the langs list, apply translation to each pair.
     lang_path
         .iter()
-        .fold(Ok(original_text.to_string()), |acc, current| match acc {
-            Ok(last) => {
-                std::thread::sleep(std::time::Duration::from_millis(delay));
-                translator.translate(&last, current)
-            }
-            Err(e) => Err(e),
+        .try_fold(original_text.to_string(), |acc, current| {
+            std::thread::sleep(std::time::Duration::from_millis(delay));
+            translator.translate(&acc, current)
         })
 }

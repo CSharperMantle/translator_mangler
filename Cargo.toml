@@ -1,19 +1,19 @@
 [package]
 name = "translator_mangler"
 description = "Mangle your input text by translating it over and over again."
-version = "0.4.1"
-edition = "2021"
-authors = [ "Rong Bao <baorong2005@126.com>" ]
+version = "0.4.2"
+edition = "2024"
+authors = [ "Rong Bao <rong.bao@csmantle.top>" ]
 license = "BSD-3-Clause"
 readme = "README.md"
 homepage = "https://github.com/CSharperMantle/translator_mangler"
 
 [dependencies]
 hex = "0.4.3"
-inquire = "0.9.1"
+inquire = "0.9.4"
 md-5 = "0.10.6"
 fastrand = "2.3.0"
-reqwest = { version = "0.12.24", features = ["blocking", "json"] }
+reqwest = { version = "0.13.2", features = ["blocking", "json"] }
 serde = { version = "1.0.228", features = ["derive"] }
 sha2 = "0.10.9"
 
