@@ -76,7 +76,7 @@ impl Translator for TranslatorGoogleCloud {
         lang: &TranslationDirection,
     ) -> Result<String, TranslationError> {
         // Generate request body
-        let form = [
+        let req_obj = [
             ("q", text),
             ("source", &lang.from_lang),
             ("target", &lang.to_lang),
@@ -89,7 +89,7 @@ impl Translator for TranslatorGoogleCloud {
         let result = self
             .client
             .post("https://translation.googleapis.com/language/translate/v2")
-            .form(&form)
+            .json(&req_obj)
             .send();
         // Handle network error
         if let Err(e) = result {
